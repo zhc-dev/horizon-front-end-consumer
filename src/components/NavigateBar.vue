@@ -43,7 +43,7 @@
 import { reactive, ref } from 'vue';
 import router from '@/router';
 import { getToken, removeToken } from '@/utils/cookie';
-import { logoutService /*, getUserInfoService */ } from '@/apis/user';
+import { logoutService, getUserInfoService } from '@/apis/user';
 
 const isLogin = ref(false)
 const userInfo = reactive({
@@ -53,8 +53,8 @@ const userInfo = reactive({
 
 const checkLogin = async () => {
   if (getToken()) {
-    // const userInfoRes = await getUserInfoService()
-    // Object.assign(userInfo, userInfoRes.data)
+    const userInfoRes = await getUserInfoService()
+    Object.assign(userInfo, userInfoRes.data)
     isLogin.value = true
   }
 }
@@ -88,7 +88,7 @@ const handleLogout = async () => {
     }
   )
   const response = await logoutService();
-  if(response.code === 1000) {console.log('退出登录成功')}
+  if (response.code === 1000) { console.log('退出登录成功') }
   removeToken()
   isLogin.value = false
 }
@@ -134,7 +134,6 @@ const handleLogout = async () => {
   }
 
   .oj-navbar-menu {
-    // margin-left: 18px;
     width: 600px;
     border: none;
 

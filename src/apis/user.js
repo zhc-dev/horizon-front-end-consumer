@@ -23,12 +23,12 @@ export function logoutService() {
     });
 }
 
-// export function getUserInfoService() {
-//     return service({
-//         url: "/user/info",
-//         method: "get",
-//     });
-// }
+export function getUserInfoService() {
+    return service({
+        url: "/user/info",
+        method: "get",
+    });
+}
 
 // export function getUserDetailService(userId) {
 //     return service({
