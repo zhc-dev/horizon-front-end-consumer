@@ -16,12 +16,12 @@ export function codeLoginService(params = {}) {
     });
 }
 
-// export function logoutService() {
-//     return service({
-//         url: "/user/logout",
-//         method: "delete",
-//     });
-// }
+export function logoutService() {
+    return service({
+        url: "/user/logout",
+        method: "delete",
+    });
+}
 
 // export function getUserInfoService() {
 //     return service({
