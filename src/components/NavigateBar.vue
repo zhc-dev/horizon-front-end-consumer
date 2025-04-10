@@ -83,7 +83,7 @@ const handleLogout = async () => {
     '温馨提示',
     {
       confirmButtonText: '确认',
-      cancelButtonText: '退出',
+      cancelButtonText: '返回',
       type: 'warning',
     }
   )
