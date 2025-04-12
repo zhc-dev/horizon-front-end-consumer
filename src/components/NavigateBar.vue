@@ -3,8 +3,8 @@
     <div class="oj-navbar-menus">
       <img class="oj-navbar-logo" src="@/assets/logo.png" />
       <el-menu router class="oj-navbar-menu" mode="horizontal">
-        <el-menu-item index="/c-oj/home/question">题库</el-menu-item>
-        <el-menu-item index="/c-oj/home/exam">竞赛</el-menu-item>
+        <el-menu-item index="/home/question">题库</el-menu-item>
+        <el-menu-item index="/home/contest">竞赛</el-menu-item>
       </el-menu>
     </div>
     <div class="oj-navbar-users">
@@ -21,7 +21,7 @@
                 <span>个人中心</span>
               </div>
             </el-dropdown-item>
-            <el-dropdown-item @click="goMyExam">
+            <el-dropdown-item @click="goMyContest">
               <div class="oj-navabar-item">
                 <span>我的竞赛</span>
               </div>
@@ -65,7 +65,7 @@ const goLogin = () => {
   router.push('/login')
 }
 
-function goMyExam() {
+function goMyContest() {
   router.push('/c-oj/home/user/exam')
 }
 

@@ -6,7 +6,7 @@ const router = createRouter({
   routes: [
     {
       path: "/",
-      redirect: 'home',
+      redirect: '/home/question',
     },
     {
       path: "/home",
@@ -15,11 +15,17 @@ const router = createRouter({
       meta: { showBanner: true },
       children: [
         {
-          path: '/question',
+          path: 'question',
           name: 'question',
           component: () => import('@/views/QuestionView.vue'),
           meta: { showBanner: true }
         },
+        {
+          path: 'contest',
+          name: 'contest',
+          component: () => import('@/views/ContestView.vue'),
+          meta: { showBanner: true }
+        }
       ]
     },
     {
