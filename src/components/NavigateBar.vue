@@ -66,7 +66,7 @@ const goLogin = () => {
 }
 
 function goMyContest() {
-  router.push('/c-oj/home/user/exam')
+  router.push('/home/user/contest')
 }
 
 function goUserDetail() {

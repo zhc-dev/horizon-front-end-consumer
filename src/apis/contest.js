@@ -24,13 +24,13 @@ export function enterContestService(enterContestRequest) {
     });
 }
 
-// export function getMyExamListService(params = {}) {
-//   return service({
-//     url: "/user/exam/list",
-//     method: "get",
-//     params,
-//   });
-// }
+export function getUserContestListService(params = {}) {
+    return service({
+        url: "/user/contest/list",
+        method: "get",
+        params,
+    });
+}
 
 // export function getExamFirstQuestionService(examId) {
 //   return service({

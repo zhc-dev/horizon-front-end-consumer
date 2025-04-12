@@ -21,29 +21,29 @@
           </el-form>
           <!-- </div> -->
           <div class="exam-list-group flex-row">
-            <div class="exam-list-item flex-col" v-for="(exam, index) in examList" :key="index">
+            <div class="exam-list-item flex-col" v-for="(contest, index) in contestList" :key="index">
               <div>
                 <img src="@/assets/images/exam.png">
               </div>
               <div class="right-info">
-                <span class="exam-title">{{ exam.title }}</span>
+                <span class="exam-title">{{ contest.title }}</span>
                 <div class="exam-content flex-col justify-between">
-                  <span>开赛时间：{{ exam.startTime }}</span>
-                  <span>结束时间：{{ exam.endTime }}</span>
+                  <span>开赛时间：{{ contest.startTime }}</span>
+                  <span>结束时间：{{ contest.endTime }}</span>
                 </div>
                 <div class="exam-button-container">
-                  <span class="exam-hash-entry" v-if="isOngoingAndUnregisteredCompetition(exam)">已开赛</span>
-                  <span class="exam-hash-entry" v-if="isEntryAndNotStart(exam)">已报名</span>
-                  <div v-if="isHistoryExam(exam)">
+                  <span class="exam-hash-entry" v-if="isOngoingAndUnregisteredCompetition(contest)">已开赛</span>
+                  <span class="exam-hash-entry" v-if="isEntryAndNotStart(contest)">已报名</span>
+                  <div v-if="isHistoryExam(contest)">
                     <el-button class="exam-practice-button" type="primary" plain
-                      @click="goExam(exam)">竞赛练习</el-button>
+                      @click="goContest(contest)">竞赛练习</el-button>
                     <el-button class="exam-rank-button" type="primary" plain
-                      @click="togglePopover(exam.contestId)">查看排名</el-button>
+                      @click="togglePopover(contest.contestId)">查看排名</el-button>
                   </div>
-                  <el-button class="exam-start-button" type="primary" plain v-if="isStartExam(exam)"
-                    @click="goExam(exam)">开始答题</el-button>
-                  <el-button class="exam-enter-button" type="primary" plain v-if="isCanEntry(exam)"
-                    @click="enterExam(exam.contestId)">报名参赛</el-button>
+                  <el-button class="exam-start-button" type="primary" plain v-if="isStartExam(contest)"
+                    @click="goContest(contest)">开始答题</el-button>
+                  <el-button class="exam-enter-button" type="primary" plain v-if="isCanEntry(contest)"
+                    @click="enterExam(contest.contestId)">报名参赛</el-button>
                 </div>
               </div>
             </div>
@@ -79,7 +79,7 @@
   import router from '@/router';
   
   //参数定义
-  const examList = ref([]) //题目列表
+  const contestList = ref([]) //题目列表
   const total = ref(0)
   const selectedOption = ref(0); // 初始化选中的文本
   const options = ref([
@@ -95,7 +95,7 @@
   //竞赛列表
   async function getContestList() {
     const result = await getContestListService(params)
-    examList.value = result.rows
+    contestList.value = result.rows
     total.value = result.total
   }
   
@@ -178,7 +178,7 @@
     getContestList() //报名成功后刷新竞赛列表
   }
   
-  function goExam(exam) {
+  function goContest(exam) {
     //需要后端提供一个获取竞赛中第一道题目的id接口
     router.push(`/c-oj/anwser?examId=${exam.examId}&examTitle=${exam.title}&examEndTime=${exam.endTime}`)
   }

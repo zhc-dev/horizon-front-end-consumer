@@ -25,6 +25,12 @@ const router = createRouter({
           name: 'contest',
           component: () => import('@/views/ContestView.vue'),
           meta: { showBanner: true }
+        },
+        {
+          path: 'user/contest',
+          name: 'user-contest',
+          component: () => import('@/views/UserContest.vue'),
+          meta: { showBanner: false }
         }
       ]
     },
