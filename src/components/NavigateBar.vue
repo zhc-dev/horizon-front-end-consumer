@@ -70,7 +70,7 @@ function goMyContest() {
 }
 
 function goUserDetail() {
-  router.push('/c-oj/home/user/detail')
+  router.push('/home/user/detail')
 }
 
 function goMessage() {

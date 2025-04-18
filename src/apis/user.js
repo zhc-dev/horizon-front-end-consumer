@@ -30,35 +30,35 @@ export function getUserInfoService() {
     });
 }
 
-// export function getUserDetailService(userId) {
-//     return service({
-//         url: "/user/detail",
-//         method: "get",
-//         params: { userId },
-//     });
-// }
+export function getUserDetailService(userId) {
+    return service({
+        url: "/user/detail",
+        method: "get",
+        params: { userId },
+    });
+}
 
+// unfinished
+export function editUserService(params = {}) {
+    return service({
+        url: "/user/edit",
+        method: "put",
+        data: params,
+    });
+}
 
-// export function editUserService(params = {}) {
-//     return service({
-//         url: "/user/edit",
-//         method: "put",
-//         data: params,
-//     });
-// }
+export function updateHeadImageService(params = {}) {
+    return service({
+        url: "/user/head-image/update",
+        method: "put",
+        data: params,
+    });
+}
 
-// export function updateHeadImageService(params = {}) {
-//     return service({
-//         url: "/user/head-image/update",
-//         method: "put",
-//         data: params,
-//     });
-// }
-
-// export function userSubmitService(params = {}) {
-//     return service({
-//         url: "/user/question/rabbit/submit",
-//         method: "post",
-//         data: params,
-//     });
-// }
+export function userSubmitService(params = {}) {
+    return service({
+        url: "/user/question/rabbit/submit",
+        method: "post",
+        data: params,
+    });
+}

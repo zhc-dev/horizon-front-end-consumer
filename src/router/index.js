@@ -31,6 +31,12 @@ const router = createRouter({
           name: 'user-contest',
           component: () => import('@/views/UserContest.vue'),
           meta: { showBanner: false }
+        },
+        {
+          path: 'user/detail',
+          name: 'user-detail',
+          component: () => import('@/views/UserDetail.vue'),
+          meta: { showBanner: false }
         }
       ]
     },
@@ -38,6 +44,11 @@ const router = createRouter({
       path: "/login",
       name: "login",
       component: () => import("@/views/LoginView.vue"),
+    },
+    {
+      path: "/coding",
+      name: "coding",
+      component: () => import("@/views/CodingView.vue"),
     },
   ],
 })
