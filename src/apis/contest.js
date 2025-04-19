@@ -32,26 +32,26 @@ export function getUserContestListService(params = {}) {
     });
 }
 
-export function getExamFirstQuestionService(examId) {
+export function getContestFirstQuestionService(contestId) {
   return service({
-    url: "/exam/getFirstQuestion",
+    url: "/contest/first",
     method: "get",
-    params: { examId },
+    params: { contestId },
   });
 }
 
-export function examPreQuestionService(examId, questionId) {
+export function contestPreviousQuestionService(contestId, questionId) {
   return service({
-    url: "/exam/preQuestion",
+    url: "/contest/pre",
     method: "get",
-    params: { examId,questionId},
+    params: { contestId,questionId},
   });
 }
 
-export function examNextQuestionService(examId, questionId) {
+export function examNextQuestionService(contestId, questionId) {
   return service({
-    url: "/exam/nextQuestion",
+    url: "/contest/next",
     method: "get",
-    params: { examId, questionId },
+    params: { contestId: contestId, questionId },
   });
 }

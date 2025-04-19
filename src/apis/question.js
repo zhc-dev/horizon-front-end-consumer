@@ -23,9 +23,9 @@ export function getQuestionDetailService(questionId) {
   });
 }
 
-export function preQuestionService(questionId) {
+export function previousQuestionService(questionId) {
   return service({
-    url: "/question/preQuestion",
+    url: "/question/pre",
     method: "get",
     params: { questionId },
   });
@@ -33,7 +33,7 @@ export function preQuestionService(questionId) {
 
 export function nextQuestionService(questionId) {
   return service({
-    url: "/question/nextQuestion",
+    url: "/question/next",
     method: "get",
     params: { questionId },
   });

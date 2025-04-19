@@ -134,7 +134,7 @@
   }
   
   function goQuestTest(questionId) {
-    router.push(`/c-oj/anwser?questionId=${questionId}`)
+    router.push(`/coding?questionId=${questionId}`)
   }
   </script>
   
