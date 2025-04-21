@@ -57,7 +57,7 @@ export function updateHeadImageService(params = {}) {
 
 export function userSubmitService(params = {}) {
     return service({
-        url: "/user/question/rabbit/submit",
+        url: "/user/question/submit",
         method: "post",
         data: params,
     });

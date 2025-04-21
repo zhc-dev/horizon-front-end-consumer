@@ -52,11 +52,7 @@
         </div>
         <div class="group_14 flex-col">
           <div class="group_8 flex-col">
-            <codeEditor
-              ref="defaultCodeRef"
-              :language-options="questionLanguages"
-              @update:value="handleEditorContent"
-            >
+            <codeEditor ref="defaultCodeRef" :language-options="questionLanguages" @update:value="handleEditorContent">
             </codeEditor>
           </div>
           <div class="code-result flex-row">
@@ -74,7 +70,8 @@
                 </div>
                 <span class="error-text" v-if="userQuestionResultVO.pass === 0">异常信息：{{
                   userQuestionResultVO.exeMessage }}</span>
-                <el-table v-if="userQuestionResultVO.userExeResultList && userQuestionResultVO.userExeResultList.length > 0"
+                <el-table
+                  v-if="userQuestionResultVO.userExeResultList && userQuestionResultVO.userExeResultList.length > 0"
                   :data="userQuestionResultVO.userExeResultList">
                   <el-table-column prop="input" label="输入" />
                   <el-table-column prop="output" label="预期结果" />
@@ -120,27 +117,27 @@ async function getQuestionDetail() {
   let effectiveQuestionId = questionId; // Use a local variable to manage ID fetching
   if (contestId && (effectiveQuestionId == null || effectiveQuestionId == '')) {
     try {
-        const eqrs = await getContestFirstQuestionService(contestId);
-        if (eqrs.code === 1000 && eqrs.data) {
-            effectiveQuestionId = eqrs.data;
-            // console.log('Fetched first contest questionId:', effectiveQuestionId);
-             // Update route if needed, or manage state locally
-            // router.replace({ query: { ...useRoute().query, questionId: effectiveQuestionId } }) // Option: update route
-            questionId = effectiveQuestionId; // Update the reactive questionId if needed elsewhere
-        } else {
-            ElMessage.error(eqrs.msg || '获取竞赛首题ID失败');
-            return; // Stop if we can't get the first question ID
-        }
-    } catch(error) {
-        ElMessage.error('请求竞赛首题ID时出错');
-        console.error("Error fetching first contest question ID:", error);
-        return;
+      const eqrs = await getContestFirstQuestionService(contestId);
+      if (eqrs.code === 1000 && eqrs.data) {
+        effectiveQuestionId = eqrs.data;
+        // console.log('Fetched first contest questionId:', effectiveQuestionId);
+        // Update route if needed, or manage state locally
+        // router.replace({ query: { ...useRoute().query, questionId: effectiveQuestionId } }) // Option: update route
+        questionId = effectiveQuestionId; // Update the reactive questionId if needed elsewhere
+      } else {
+        ElMessage.error(eqrs.msg || '获取竞赛首题ID失败');
+        return; // Stop if we can't get the first question ID
+      }
+    } catch (error) {
+      ElMessage.error('请求竞赛首题ID时出错');
+      console.error("Error fetching first contest question ID:", error);
+      return;
     }
   }
 
   if (!effectiveQuestionId) {
-      ElMessage.warning('没有有效的题目ID');
-      return; // Stop if no valid ID
+    ElMessage.warning('没有有效的题目ID');
+    return; // Stop if no valid ID
   }
 
   try {
@@ -148,7 +145,7 @@ async function getQuestionDetail() {
     // console.log('API Response for getQuestionDetailService:', res); // Debug API response
     if (res.code === 1000 && res.data) {
       Object.assign(questionDetail, res.data); // Update question details
-       // Make sure 'languages' exists and is an array
+      // Make sure 'languages' exists and is an array
       questionLanguages.value = Array.isArray(res.data.languages) ? res.data.languages : [];
       // console.log('Updated questionLanguages:', questionLanguages.value);
 
@@ -172,36 +169,35 @@ getQuestionDetail();
 
 // Helper function to switch question and reload details
 async function switchQuestion(fetchNewIdFunc) {
-    try {
-        const res = await fetchNewIdFunc();
-        if (res.code === 1000 && res.data) {
-            questionId = res.data; // Update the current questionId
-             // Optionally update route query parameter
-            // router.push({ query: { ...useRoute().query, questionId: questionId } });
-            await getQuestionDetail(); // Reload details for the new question
-        } else {
-            ElMessage.error(res.msg || '切换题目失败');
-        }
-    } catch (error) {
-        ElMessage.error('切换题目时发生错误');
-        console.error("Error switching question:", error);
+  try {
+    const res = await fetchNewIdFunc();
+    if (res.code === 1000 && res.data) {
+      questionId = res.data; // Update the current questionId
+      // Optionally update route query parameter
+      // router.push({ query: { ...useRoute().query, questionId: questionId } });
+      await getQuestionDetail(); // Reload details for the new question
+    } else {
+      ElMessage.error(res.msg);
     }
+  } catch (error) {
+    console.error("Error switching question:", error);
+  }
 }
 
 async function preQuestion() {
-    if (contestId) {
-        await switchQuestion(() => contestPreviousQuestionService(contestId, questionId));
-    } else {
-        await switchQuestion(() => previousQuestionService(questionId));
-    }
+  if (contestId) {
+    await switchQuestion(() => contestPreviousQuestionService(contestId, questionId));
+  } else {
+    await switchQuestion(() => previousQuestionService(questionId));
+  }
 }
 
 async function nextQuestion() {
-     if (contestId) {
-        await switchQuestion(() => examNextQuestionService(contestId, questionId));
-    } else {
-        await switchQuestion(() => nextQuestionService(questionId));
-    }
+  if (contestId) {
+    await switchQuestion(() => examNextQuestionService(contestId, questionId));
+  } else {
+    await switchQuestion(() => nextQuestionService(questionId));
+  }
 }
 
 
@@ -211,10 +207,10 @@ function handleCountdownFinish() {
 }
 
 const submitDTO = reactive({
-  examId: contestId || '', // Initialize with contestId if present
+  contestId: contestId || '', // Initialize with contestId if present
   questionId: '', // Will be updated before submit
-  programType: 0, // Default to Java (Assuming 0=Java, need mapping)
-  userCode: ''
+  languageId: 0, // Default to Java (Assuming 0=Java, need mapping)
+  code: ''
 });
 
 function handleEditorContent(content) {
@@ -245,14 +241,14 @@ function startPolling() {
     await getQuestionResult();
   }, 3000); // Poll every 3 seconds (adjust as needed)
 
-   // Add a timeout for polling to prevent infinite loops
-   setTimeout(() => {
-        if (userQuestionResultVO.value.pass === 3) {
-            stopPolling();
-            ElMessage.warning('获取结果超时，请稍后手动查询或重新提交。');
-            userQuestionResultVO.value.pass = 2; // Reset status
-        }
-    }, 60000); // Timeout after 60 seconds
+  // Add a timeout for polling to prevent infinite loops
+  setTimeout(() => {
+    if (userQuestionResultVO.value.pass === 3) {
+      stopPolling();
+      ElMessage.warning('获取结果超时，请稍后手动查询或重新提交。');
+      userQuestionResultVO.value.pass = 2; // Reset status
+    }
+  }, 60000); // Timeout after 60 seconds
 }
 
 function stopPolling() {
@@ -265,11 +261,12 @@ function stopPolling() {
 
 async function submitQuestion() {
   if (!submitDTO.userCode) {
-      ElMessage.warning('代码不能为空！');
-      return;
+    ElMessage.warning('代码不能为空！');
+    return;
   }
   submitDTO.questionId = questionId; // Ensure the current questionId is set
-  submitDTO.examId = contestId || null; // Set examId, use null if not in contest
+  submitDTO.contestId = contestId || null; // Set examId, use null if not in contest
+  submitDTO.languageId = 0;
 
   // TODO: Update submitDTO.programType based on selected language in CodeEditor
   // This requires CodeEditor to emit the selected language ID or type.
@@ -285,18 +282,18 @@ async function submitQuestion() {
   } catch (error) {
     ElMessage.error('代码提交失败');
     console.error("Error submitting code:", error);
-     userQuestionResultVO.value.pass = 2; // Reset status on submission failure
+    userQuestionResultVO.value.pass = 2; // Reset status on submission failure
   }
 }
 
 async function getQuestionResult() {
   if (!currentTime || !questionId) {
-      // console.log('Polling skipped: currentTime or questionId missing.');
-      stopPolling();
-      return;
+    // console.log('Polling skipped: currentTime or questionId missing.');
+    stopPolling();
+    return;
   }
   try {
-    const res = await getQuestionResultService(submitDTO.examId, questionId, currentTime);
+    const res = await getQuestionResultService(submitDTO.contestId, questionId, currentTime);
     // console.log('Polling result:', res);
     if (res.code === 1000 && res.data) {
       userQuestionResultVO.value = { ...res.data, pass: res.data.pass ?? 2 }; // Update result, default pass to 2 if null
@@ -307,11 +304,11 @@ async function getQuestionResult() {
         stopPolling(); // Stop polling if final result received
       }
     } else if (res.code !== 1000) {
-         // Handle API errors during polling, maybe stop polling
-         console.warn('Polling error:', res.msg);
-         // Optionally stop polling on error: stopPolling();
+      // Handle API errors during polling, maybe stop polling
+      console.warn('Polling error:', res.msg);
+      // Optionally stop polling on error: stopPolling();
     }
-     // If status is still 3 (Running), the interval will continue
+    // If status is still 3 (Running), the interval will continue
   } catch (error) {
     console.error("Error getting question result:", error);
     stopPolling(); // Stop polling on network/request error
@@ -447,7 +444,8 @@ onBeforeUnmount(() => {
           margin-right: 100px;
           display: flex;
           align-items: center;
-          gap: 4px; /* Add gap for icon and text */
+          gap: 4px;
+          /* Add gap for icon and text */
         }
       }
 
@@ -491,22 +489,28 @@ onBeforeUnmount(() => {
           font-size: 14px; // Adjust font size
           color: #abaeac;
           margin-bottom: 15px;
-           > div { margin-bottom: 5px; }
+
+          >div {
+            margin-bottom: 5px;
+          }
         }
 
         .question-content {
           font-size: 16px; // Adjust font size
           line-height: 1.6;
-           /* Style specific elements within v-html if needed */
-           :deep(pre) { // Example: Styling code blocks within content
-              background-color: #f5f5f5;
-              padding: 10px;
-              border-radius: 4px;
-              overflow-x: auto;
-            }
-            :deep(code) {
-               font-family: monospace;
-            }
+
+          /* Style specific elements within v-html if needed */
+          :deep(pre) {
+            // Example: Styling code blocks within content
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+          }
+
+          :deep(code) {
+            font-family: monospace;
+          }
         }
 
         // Remove fixed height scrollbar elements (group_6, etc.) if using native scroll
@@ -525,7 +529,7 @@ onBeforeUnmount(() => {
           display: flex; // Use flex for internal layout if needed
           flex-direction: column; // Ensure children stack
           min-height: 400px; // Minimum height for the editor area
-           overflow: hidden; // Prevent ACE editor overflow issues
+          overflow: hidden; // Prevent ACE editor overflow issues
         }
 
         .code-result {
@@ -546,68 +550,90 @@ onBeforeUnmount(() => {
           }
 
           .code-result-content {
-             font-size: 16px;
-             font-weight: 500;
+            font-size: 16px;
+            font-weight: 500;
           }
         }
+
         .group_15 {
-            // width: 100%; // Take full width
-            // height: 250px; // Fixed height for result area, adjust as needed
-            flex-shrink: 0; // Prevent shrinking
-            overflow: hidden; // Hide overflow initially
+          // width: 100%; // Take full width
+          // height: 250px; // Fixed height for result area, adjust as needed
+          flex-shrink: 0; // Prevent shrinking
+          overflow: hidden; // Hide overflow initially
 
-             .section_1 {
-                background-color: rgba(255, 255, 255, 1);
-                border-radius: 0px 0px 10px 10px;
-                width: 100%;
-                height: 100%; // Take full height of group_15
-                padding: 15px 20px; // Add padding
-                overflow-y: auto; // Allow scrolling for results
+          .section_1 {
+            background-color: rgba(255, 255, 255, 1);
+            border-radius: 0px 0px 10px 10px;
+            width: 100%;
+            height: 100%; // Take full height of group_15
+            padding: 15px 20px; // Add padding
+            overflow-y: auto; // Allow scrolling for results
 
-                .section_3 {
-                   width: 100%;
-                   height: auto; // Adjust height based on content
-                   margin: 0; // Remove margin
+            .section_3 {
+              width: 100%;
+              height: auto; // Adjust height based on content
+              margin: 0; // Remove margin
 
-                  .error-text {
-                    padding: 8px 12px;
-                    font-size: 14px;
-                    color: #d32f2f; // Error color
-                    background: #ffebee; // Light red background
-                    border-left: 3px solid #d32f2f;
-                    margin-top: 10px;
-                    margin-bottom: 10px;
-                    white-space: pre-wrap; // Preserve whitespace/newlines
-                    word-break: break-all; // Break long messages
-                    width: auto; // Adjust width
+              .error-text {
+                padding: 8px 12px;
+                font-size: 14px;
+                color: #d32f2f; // Error color
+                background: #ffebee; // Light red background
+                border-left: 3px solid #d32f2f;
+                margin-top: 10px;
+                margin-bottom: 10px;
+                white-space: pre-wrap; // Preserve whitespace/newlines
+                word-break: break-all; // Break long messages
+                width: auto; // Adjust width
+              }
+
+              .text-wrapper_2 {
+                width: auto; // Adjust width
+                height: auto; // Adjust height
+                margin-bottom: 10px; // Space below status
+
+                .text_1 {
+                  width: auto; // Adjust width
+                  height: auto; // Adjust height
+                  font-size: 16px; // Adjust font size
+                  font-weight: bold;
+                  line-height: 1.5; // Adjust line height
+                  padding: 2px 8px; // Add padding
+                  border-radius: 4px; // Rounded corners
+
+                  &.red {
+                    color: #fff;
+                    background-color: #f44336;
                   }
 
-                  .text-wrapper_2 {
-                    width: auto; // Adjust width
-                    height: auto; // Adjust height
-                    margin-bottom: 10px; // Space below status
-
-                    .text_1 {
-                       width: auto; // Adjust width
-                       height: auto; // Adjust height
-                       font-size: 16px; // Adjust font size
-                       font-weight: bold;
-                       line-height: 1.5; // Adjust line height
-                       padding: 2px 8px; // Add padding
-                       border-radius: 4px; // Rounded corners
-
-                      &.red { color: #fff; background-color: #f44336; } // Fail
-                      &.info { color: #fff; background-color: #2196F3; } // Running
-                      &.success { color: #fff; background-color: #4CAF50; } // Pass
-                      &.warning { color: #212121; background-color: #FFC107; } // Not Run Yet
-                    }
+                  // Fail
+                  &.info {
+                    color: #fff;
+                    background-color: #2196F3;
                   }
-                   /* Style el-table */
-                   .el-table {
-                       margin-top: 10px;
-                   }
+
+                  // Running
+                  &.success {
+                    color: #fff;
+                    background-color: #4CAF50;
+                  }
+
+                  // Pass
+                  &.warning {
+                    color: #212121;
+                    background-color: #FFC107;
+                  }
+
+                  // Not Run Yet
                 }
-             }
+              }
+
+              /* Style el-table */
+              .el-table {
+                margin-top: 10px;
+              }
+            }
+          }
         }
       }
     }
@@ -617,9 +643,11 @@ onBeforeUnmount(() => {
 /* Add styles for el-icon alignment if needed */
 .el-icon {
   vertical-align: middle;
-  margin-right: 4px; /* Adjust spacing */
+  margin-right: 4px;
+  /* Adjust spacing */
 }
+
 .question-nav .el-icon span {
-     vertical-align: middle;
+  vertical-align: middle;
 }
 </style>
